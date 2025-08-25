@@ -4,7 +4,8 @@ namespace TodoAPI.Services
 {
 	public interface ITodoService
 	{
-		Task<int> AddTask(CreateTask request);
+		Task<GetTask> AddTask(CreateTask request);
+		Task<int> UpdateStatus(int taskId);
 		Task<int> UpdateTask(CreateTask request, int taskId);
 		Task<int> RemoveTask(int taskId);
 		Task<List<GetTask>> GetAllTask();

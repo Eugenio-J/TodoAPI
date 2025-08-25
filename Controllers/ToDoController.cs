@@ -32,10 +32,10 @@ namespace TodoAPI.Controllers
 		}
 
 		[HttpPost("add-task")]
-		public async Task<ActionResult<int>> AddTask(CreateTask request) 
+		public async Task<ActionResult<GetTask>> AddTask(CreateTask request) 
 		{
 			var result = await _todoService.AddTask(request);
-			if (result == 0) return BadRequest();
+			if (result == null) return BadRequest();
 			return Ok(result);
 		}
 
@@ -46,6 +46,15 @@ namespace TodoAPI.Controllers
 			if (result == 0) return BadRequest(); 
 			return Ok(result);
 		}
+
+		[HttpPut("update-status")]
+		public async Task<ActionResult<int>> UpdateStatus([FromQuery] int taskId)
+		{
+			var result = await _todoService.UpdateStatus(taskId);
+			if (result == 0) return BadRequest();
+			return Ok(result);
+		}
+
 
 		[HttpDelete("delete-task")]	
 		public async Task<ActionResult<int>> RemoveTask([FromQuery] int taskId)

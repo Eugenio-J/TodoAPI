@@ -22,11 +22,11 @@ namespace TodoAPI.Services
 				Title = task.Title,
 			};
 		}
-		public async Task<int> AddTask(CreateTask request)
+		public async Task<GetTask> AddTask(CreateTask request)
 		{
 			if (string.IsNullOrEmpty(request.Title)) 
 			{
-				return 0;
+				return new GetTask();
 			}
 
 			Todo newTask = new Todo 
@@ -37,7 +37,9 @@ namespace TodoAPI.Services
 
 			_dbContext.Todos.Add(newTask);
 
-			return await _dbContext.SaveChangesAsync() == 0 ? 0 : 1 ;
+			await _dbContext.SaveChangesAsync();
+
+			return ConvertDTO(newTask);
 		}
 
 		public async Task<GetTask?> GetSingleTask(int Id)
@@ -76,6 +78,17 @@ namespace TodoAPI.Services
 
 			task.Title = request.Title;
 			task.IsCompleted = request.IsCompleted;
+
+			return await _dbContext.SaveChangesAsync();
+		}
+
+		public async Task<int> UpdateStatus(int taskId)
+		{
+			var task = await _dbContext.Todos.FirstOrDefaultAsync(x => x.Id == taskId);
+
+			if (task == null) return 0;
+
+			task.IsCompleted = !task.IsCompleted;
 
 			return await _dbContext.SaveChangesAsync();
 		}
